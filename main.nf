@@ -157,15 +157,17 @@ process parse_kit_metadata {
             --output merged.csv
         """
     }else{
+        def needs_expected_cells = !(params.shortlist_method in ['distance', 'abundance'])
         // A visium barcode is a tissue coordinate not a cell, so we don't need expected cells.
-        if (!params.kit.startsWith("visium") & params.expected_cells == null ){
+        if (!params.kit.startsWith("visium") && params.expected_cells == null && needs_expected_cells){
             throw new Exception("expected_cells should be provided for 10x kits other than Visium")
         }
+        def expected_cells_opt = params.expected_cells == null ? "" : "--expected_cells $params.expected_cells"
         """
         workflow-glue parse_kit_metadata from_cli \
             --kit_config kit_config.csv \
             --kit "$params.kit" \
-            --expected_cells $params.expected_cells \
+            ${expected_cells_opt} \
             --spaceranger_bam $params.spaceranger_bam \
             --adapter_stats $params.adapter_stats \
             --sample_ids $sample_ids \

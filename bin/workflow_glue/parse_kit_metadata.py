@@ -61,8 +61,7 @@ def argparser():
     )
     parser_cli.add_argument(
         "--expected_cells",
-        help="Number of expected cells",
-        required=True
+        help="Number of expected cells"
     )
     parser_cli.add_argument(
         "--adapter_stats",
